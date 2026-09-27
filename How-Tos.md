@@ -71,30 +71,32 @@ onBlockStandStart = (playerId, _x, _y, _z, blockName) => {
 }
 ```
 ## Worlds
-(haven’t done)
-Due to worlds being their own lobby, there is no possibility for variations. However, to test out custom games, you can reload lobby code as a specific variation. There are two main ways of doing this, however both require you to have at least Coder permissions or higher.
-In the Code Editor, click the three dots on the right to open the More Options menu. Here, you can type in a variation and reload the lobby code to test as that variation
-If your code runs api.matchmakeToVariation, it will ask you if you want to reload to that variation.
-Plugins
 
-First-party plugins provide reusable World Code features. Import a plugin from @plugins/<name> in your entry file or another project file:
+Due to worlds being their own lobby, there is no possibility for variations. However, to test out custom games, you can reload lobby code as a specific variation. There are two main ways of doing this, however both require you to have at least Coder permissions or higher.
+ * In the Code Editor, click the three dots on the right to open the More Options menu. Here, you can type in a variation and reload the lobby code to test as that variation
+ * If your code runs api.matchmakeToVariation, it will ask you if you want to reload to that variation.
+## Plugins
+
+First-party plugins provide reusable World Code features. Import a plugin from `@plugins/<name>` in your entry file or another project file:
+```
 import { setTimeout, getRandomItem } from "@plugins/helpers"
 import { debugLog } from "@plugins/debug"
-
-Importing a plugin also loads its callbacks. Plugin callbacks run before callbacks with the same name in your own code, so both of these tick callbacks run:
+```
+Importing a plugin also loads its callbacks. Plugin callbacks run before callbacks with the same name in your own code, so both of these `tick` callbacks run:
+```
 import { setTimeout } from "@plugins/helpers"
 
 tick = () => {
     /* Your tick code */
 }
+```
+If callbacks return a value, your callback's return value takes precedence over the plugin's. Avoid replacing a useful plugin return by accident, particularly in callbacks such as `onPlayerChat` and `onRespawnRequest`.
+Plugins may import other plugins. Their dependencies are loaded automatically, so importing `@plugins/sessionBasedGame` also loads the helpers it needs.
+## Available plugins
 
-If callbacks return a value, your callback's return value takes precedence over the plugin's. Avoid replacing a useful plugin return by accident, particularly in callbacks such as onPlayerChat and onRespawnRequest.
-Plugins may import other plugins. Their dependencies are loaded automatically, so importing @plugins/sessionBasedGame also loads the helpers it needs.
-Available plugins
-
-@plugins/helpers exports setTimeout, setInterval, clearTimeout, clearInterval, forceLoadChunk, randomInt, shuffleArray, and getRandomItem.
-@plugins/debug exports debugLog.
-@plugins/sessionBasedGame provides a lobby-to-game lifecycle, teams, spectators, map loading, optional map voting, optional team choosing, and automatic game resets.
+ * @plugins/helpers exports setTimeout, setInterval, clearTimeout, clearInterval, forceLoadChunk, randomInt, shuffleArray, and getRandomItem.
+ * @plugins/debug exports debugLog.
+ * @plugins/sessionBasedGame provides a lobby-to-game lifecycle, teams, spectators, map loading, optional map voting, optional team choosing, and automatic game resets.
 The editor's autocomplete and the read-only plugin source files are the reference for the latest exports and option types.
 Building a SessionBasedGame
 
